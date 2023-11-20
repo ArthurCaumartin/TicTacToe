@@ -59,6 +59,16 @@ public class GridData : MonoBehaviour
         return _grid[x, y];
     }
 
+    public int GetGridColumnNumber()
+    {
+        return _grid.GetLength(0);
+    }
+
+    public int GetGridRowNumber()
+    {
+        return _grid.GetLength(1);
+    }
+
     public void ResetGrid()
     {
         for (int x = 0; x < _grid.GetLength(0); x++)
