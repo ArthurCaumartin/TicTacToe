@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
+using System.Threading;
+using Unity.Collections;
 
 public class ViewManager : MonoBehaviour
 {
@@ -9,17 +11,31 @@ public class ViewManager : MonoBehaviour
     [SerializeField] private GridLayoutGroup _buttonLayoutContainer;
     [SerializeField] private GameObject _buttonPrefab;
 
-    //! fct pour onClic avec coordoné
-    public void ClicOnCase(int x, int y, CaseState caseCurrentState)
-    {
+    [Header("Sprites :")]
+    [SerializeField] private Sprite _circleImage;
+    [SerializeField] private Sprite _crossImage;
+    [SerializeField] private Sprite _emptyImage;
 
-    }
+    //! box controler pour qu'il set lui meme son sprite
+    private Dictionary<(int x, int y), CaseControler> _caseControlerRef = new Dictionary<(int x, int y), CaseControler>();
+                        //? topel ?
 
     void Start()
     {
+        CreateGrid();
+    }
+
+    public void ClicOnCase(int x, int y)
+    {
+        //! check tour de qui dois jouer
+        _gameManager.PlayerClicOnCase(x, y);
+    }
+
+    private void CreateGrid()
+    {
         Vector2 size = _gameManager.GetGridSize();
+
         _buttonLayoutContainer.constraintCount = (int)size.x;
-        _buttonLayoutContainer.transform.localScale /= size.x * .5f;
 
         for (int i = 0; i < size.x; i++)
         {
@@ -29,15 +45,31 @@ public class ViewManager : MonoBehaviour
                 CaseControler caseControler = newCase.GetComponent<CaseControler>();
                 caseControler.X = i;
                 caseControler.Y = j;
-                //! get case et set coordoné
+
+                _caseControlerRef.Add((i, j), caseControler);
             }
         }
     }
 
     public void UpdateCaseVisual(int x, int y, CaseState state)
     {
-        print("EJRGIGUHRIEJRGIGUHRIGUHRTIEJRGIGUHRIGUHRTIGUGHGUGHGUHRTIGUGHEJREJRGIGUHRIGUHRTIGUGHGIGUHRIGUHRTIGUGH");
-        print("oui !");
-        print("non !");
+        Sprite toSet = null;
+
+        switch(state)
+        {
+            case CaseState.Circle :
+                toSet = _circleImage;
+            break;
+
+            case CaseState.Cross :
+                toSet = _crossImage;
+            break;
+
+            case CaseState.Empty :
+                toSet = _emptyImage;
+            break;
+        }
+
+        _caseControlerRef[(x, y)].SetSprite(toSet);
     }
 }

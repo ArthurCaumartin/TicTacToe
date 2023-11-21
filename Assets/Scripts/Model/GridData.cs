@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+[System.Serializable]
 public enum CaseState
 {
     Empty,
@@ -13,13 +14,13 @@ public enum CaseState
 
 public class GridData : MonoBehaviour
 {
-    private CaseState[,] _grid = new CaseState[10, 10];
+    private CaseState[,] _grid = new CaseState[3, 3];
     [SerializeField] private GameManager _gameManager;
     public event EventHandler<CaseChangeArgs> onCaseChangeEvent;
 
-    public void SetGrid(int x, int y, CaseState stateToSet)
+    public void SetCaseState(int x, int y, CaseState stateToSet)
     {
-        if (_grid[x, y] == CaseState.Empty)
+        if (_grid[x, y] == stateToSet)
             return;
 
         _grid[x, y] = stateToSet;
@@ -47,13 +48,13 @@ public class GridData : MonoBehaviour
     {
         for (int x = 0; x < _grid.GetLength(0); x++)
             for (int y = 0; y < _grid.GetLength(1); y++)
-                _grid[x, y] = CaseState.Empty;
+                SetCaseState(x, y, CaseState.Empty);
 
         onCaseChangeEvent?.Invoke(this, new CaseChangeArgs(-1, -1, CaseState.Empty, true));
         //! 3 premier parametre osef
     }
-
 }
+
 public class CaseChangeArgs
 {
     public CaseChangeArgs(int x, int y, CaseState newState, bool isAllCaseReset = false)
