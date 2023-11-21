@@ -8,40 +8,48 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GridData _gridData;
     [SerializeField] private ViewManager _viewManager;
     [SerializeField] private int _turnNumber;
+    private int _numberBoxAvaiable;
 
     void Start()
     {
-        _gridData.onCaseChangeEvent += OnBoxChange;
+        _gridData.onBoxChangeEvent += OnBoxChange;
+        _numberBoxAvaiable = _gridData.GetGridColumnNumber() * _gridData.GetGridRowNumber();
     }
 
-    public void PlayerClicOnCase(int x, int y)
+    public void PlayerClicOnBox(int x, int y)
     {
-        CaseState toSet = CaseState.Empty;
+        BoxState toSet = BoxState.Empty;
         int player = _turnNumber % 2;
-        print("Player : " + player);
+        // print("Player : " + player);
         switch (player)
         {
-            case 0 :
-                toSet = CaseState.Cross;
-            break;
-            case 1 :
-                toSet = CaseState.Circle;
-            break;
+            case 0:
+                toSet = BoxState.Cross;
+                break;
+            case 1:
+                toSet = BoxState.Circle;
+                break;
         }
-        _gridData.SetCaseState(x, y, toSet);
-        _turnNumber++;
+        _gridData.SetBoxState(x, y, toSet);
     }
 
-    public void OnBoxChange(object sender, CaseChangeArgs args)
+    public void OnBoxChange(object sender, BoxChangeArgs args)
     {
-        if(args.isAllCaseReset)
+        //! tej l'event et juste faire un apelle de fct
+        if (CheckVictory(args.x, args.y))
         {
-            ResetAllVisual();
-            return;
+            print("GG !");
+            _viewManager.ShowVictoryPanel();
         }
 
-        //? as peut send un null, donc ? au cas ou
-        print((sender as GridData)?.name  + " Change data " + args.x + "," + args.y + " to " + args.newState);
+        if (CheckNull())
+        {
+            print("c pa fini");
+            _viewManager.ShowDrawPanel();
+        }
+
+        _turnNumber++;
+        _numberBoxAvaiable--;
         _viewManager.UpdateCaseVisual(args.x, args.y, args.newState);
     }
 
@@ -52,13 +60,52 @@ public class GameManager : MonoBehaviour
         {
             for (int y = 0; y < _gridData.GetGridRowNumber(); y++)
             {
-                _viewManager.UpdateCaseVisual(x, y, CaseState.Empty);
+                _viewManager.UpdateCaseVisual(x, y, BoxState.Empty);
             }
         }
+    }
+
+    public bool CheckVictory(int x, int y)
+    {
+        if (_gridData.GetBoxState(x, 0) == _gridData.GetBoxState(x, 1) && 
+            _gridData.GetBoxState(x, 1) == _gridData.GetBoxState(x, 2))
+        {
+            return true;
+        }
+
+        if (_gridData.GetBoxState(0, y) == _gridData.GetBoxState(1, y) && 
+            _gridData.GetBoxState(1, y) == _gridData.GetBoxState(2, y))
+        {
+            return true;
+        }
+
+        if (_gridData.GetBoxState(0, 0) != BoxState.Empty && _gridData.GetBoxState(0, 0) == _gridData.GetBoxState(1, 1) && 
+            _gridData.GetBoxState(1, 1) == _gridData.GetBoxState(2, 2))
+        {
+            return true;
+        }
+
+        if (_gridData.GetBoxState(0, 2) != BoxState.Empty && _gridData.GetBoxState(0, 2) == _gridData.GetBoxState(1, 1) && 
+            _gridData.GetBoxState(1, 1) == _gridData.GetBoxState(2, 0))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    public bool CheckNull()
+    {
+        return _numberBoxAvaiable == 0;
     }
 
     public Vector2 GetGridSize()
     {
         return new Vector2(_gridData.GetGridColumnNumber(), _gridData.GetGridRowNumber());
+    }
+
+    public void ResetGrid()
+    {
+        _gridData.ResetGrid();
     }
 }

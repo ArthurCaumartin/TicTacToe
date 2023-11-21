@@ -11,14 +11,18 @@ public class ViewManager : MonoBehaviour
     [SerializeField] private GridLayoutGroup _buttonLayoutContainer;
     [SerializeField] private GameObject _buttonPrefab;
 
-    [Header("Sprites :")]
+    [Header("Panel : ")]
+    [SerializeField] private GameObject _panelVictory;
+    [SerializeField] private GameObject _panelDraw;
+
+    [Header("Sprites : ")]
     [SerializeField] private Sprite _circleImage;
     [SerializeField] private Sprite _crossImage;
     [SerializeField] private Sprite _emptyImage;
 
     //! box controler pour qu'il set lui meme son sprite
-    private Dictionary<(int x, int y), CaseControler> _caseControlerRef = new Dictionary<(int x, int y), CaseControler>();
-                        //? topel ?
+    private Dictionary<(int x, int y), BoxControler> _caseControlerRef = new Dictionary<(int x, int y), BoxControler>();
+    //? topel ?
 
     void Start()
     {
@@ -28,7 +32,7 @@ public class ViewManager : MonoBehaviour
     public void ClicOnCase(int x, int y)
     {
         //! check tour de qui dois jouer
-        _gameManager.PlayerClicOnCase(x, y);
+        _gameManager.PlayerClicOnBox(x, y);
     }
 
     private void CreateGrid()
@@ -42,34 +46,58 @@ public class ViewManager : MonoBehaviour
             for (int j = 0; j < size.y; j++)
             {
                 GameObject newCase = Instantiate(_buttonPrefab, _buttonLayoutContainer.transform);
-                CaseControler caseControler = newCase.GetComponent<CaseControler>();
+                BoxControler caseControler = newCase.GetComponentInChildren<BoxControler>();
                 caseControler.X = i;
                 caseControler.Y = j;
 
                 _caseControlerRef.Add((i, j), caseControler);
             }
         }
+        // _buttonLayoutContainer.enabled = false;
     }
 
-    public void UpdateCaseVisual(int x, int y, CaseState state)
+    public void UpdateCaseVisual(int x, int y, BoxState state)
     {
         Sprite toSet = null;
 
-        switch(state)
+        switch (state)
         {
-            case CaseState.Circle :
+            case BoxState.Circle:
                 toSet = _circleImage;
-            break;
+                break;
 
-            case CaseState.Cross :
+            case BoxState.Cross:
                 toSet = _crossImage;
-            break;
+                break;
 
-            case CaseState.Empty :
+            case BoxState.Empty:
                 toSet = _emptyImage;
-            break;
+                break;
         }
 
         _caseControlerRef[(x, y)].SetSprite(toSet);
+    }
+
+    public void ResetButton()
+    {
+        _gameManager.ResetGrid();
+    }
+
+    public void ShowVictoryPanel()
+    {
+        HideAllPanel();
+        _panelVictory.SetActive(true);
+    }
+
+    public void ShowDrawPanel()
+    {
+        HideAllPanel();
+        _panelDraw.SetActive(true);
+    }
+
+    void HideAllPanel()
+    {
+        _panelVictory.SetActive(false);
+        _panelDraw.SetActive(false);
     }
 }

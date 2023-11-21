@@ -1,11 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 [System.Serializable]
-public enum CaseState
+public enum BoxState
 {
     Empty,
     Cross,
@@ -14,22 +15,22 @@ public enum CaseState
 
 public class GridData : MonoBehaviour
 {
-    private CaseState[,] _grid = new CaseState[3, 3];
+    private BoxState[,] _grid = new BoxState[3, 3];
     [SerializeField] private GameManager _gameManager;
-    public event EventHandler<CaseChangeArgs> onCaseChangeEvent;
+    public event EventHandler<BoxChangeArgs> onBoxChangeEvent;
 
-    public void SetCaseState(int x, int y, CaseState stateToSet)
+    public void SetBoxState(int x, int y, BoxState stateToSet)
     {
-        if (_grid[x, y] == stateToSet)
+        if (_grid[x, y] != BoxState.Empty)
             return;
 
         _grid[x, y] = stateToSet;
 
         //! le "?" si onCase == null, call pas la fct
-        onCaseChangeEvent?.Invoke(this, new CaseChangeArgs(x, y, stateToSet));
+        onBoxChangeEvent?.Invoke(this, new BoxChangeArgs(x, y, stateToSet));
     }
 
-    public CaseState GetCaseState(int x, int y)
+    public BoxState GetBoxState(int x, int y)
     {
         return _grid[x, y];
     }
@@ -48,25 +49,23 @@ public class GridData : MonoBehaviour
     {
         for (int x = 0; x < _grid.GetLength(0); x++)
             for (int y = 0; y < _grid.GetLength(1); y++)
-                SetCaseState(x, y, CaseState.Empty);
+                SetBoxState(x, y, BoxState.Empty);
 
-        onCaseChangeEvent?.Invoke(this, new CaseChangeArgs(-1, -1, CaseState.Empty, true));
+        onBoxChangeEvent?.Invoke(this, new BoxChangeArgs(-1, -1, BoxState.Empty));
         //! 3 premier parametre osef
     }
 }
 
-public class CaseChangeArgs
+public class BoxChangeArgs
 {
-    public CaseChangeArgs(int x, int y, CaseState newState, bool isAllCaseReset = false)
+    public BoxChangeArgs(int x, int y, BoxState newState)
     {
         this.x = x;
         this.y = y;
         this.newState = newState;
-        this.isAllCaseReset = isAllCaseReset;
     }
 
     public int x;
     public int y;
-    public CaseState newState;
-    public bool isAllCaseReset;
+    public BoxState newState;
 }
