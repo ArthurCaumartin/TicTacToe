@@ -11,41 +11,15 @@ public enum CaseState
     Circle
 }
 
-public class CaseChangeArgs
-{
-    public CaseChangeArgs(int x, int y, CaseState newState, bool isAllCaseReset = false)
-    {
-        this.x = x;
-        this.y = y;
-        this.newState = newState;
-        this.isAllCaseReset = isAllCaseReset;
-    }
-
-    public int x;
-    public int y;
-    public CaseState newState;
-    public bool isAllCaseReset;
-
-}
-
 public class GridData : MonoBehaviour
 {
-    private CaseState[,] _grid = new CaseState[3,3];
-
+    private CaseState[,] _grid = new CaseState[10, 10];
     [SerializeField] private GameManager _gameManager;
-
-    //! ajout event pour reset ?
     public event EventHandler<CaseChangeArgs> onCaseChangeEvent;
-
-    [ContextMenu("YAYAYA")]
-    public void DGRUSEFO()
-    {
-        SetGrid(1, 1, CaseState.Cross);
-    }
 
     public void SetGrid(int x, int y, CaseState stateToSet)
     {
-        if(_grid[x, y] == CaseState.Empty)
+        if (_grid[x, y] == CaseState.Empty)
             return;
 
         _grid[x, y] = stateToSet;
@@ -76,6 +50,22 @@ public class GridData : MonoBehaviour
                 _grid[x, y] = CaseState.Empty;
 
         onCaseChangeEvent?.Invoke(this, new CaseChangeArgs(-1, -1, CaseState.Empty, true));
-                                                        //! 3 premier parametre osef
+        //! 3 premier parametre osef
     }
+
+}
+public class CaseChangeArgs
+{
+    public CaseChangeArgs(int x, int y, CaseState newState, bool isAllCaseReset = false)
+    {
+        this.x = x;
+        this.y = y;
+        this.newState = newState;
+        this.isAllCaseReset = isAllCaseReset;
+    }
+
+    public int x;
+    public int y;
+    public CaseState newState;
+    public bool isAllCaseReset;
 }

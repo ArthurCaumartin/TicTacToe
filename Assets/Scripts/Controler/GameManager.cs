@@ -8,6 +8,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GridData _gridData;
     [SerializeField] private ViewManager _viewManager;
 
+    void Start()
+    {
+        //! abonement
+        _gridData.onCaseChangeEvent += OnBoxChange;
+    }
+
     //! oblige object sender pour le cotes generic
     public void OnBoxChange(object sender, CaseChangeArgs args)
     {
@@ -29,9 +35,8 @@ public class GameManager : MonoBehaviour
         _viewManager.UpdateCaseVisual(args.x, args.y, args.newState);
     }
 
-    void Start()
+    public Vector2 GetGridSize()
     {
-        //! abonement
-        _gridData.onCaseChangeEvent += OnBoxChange;
+        return new Vector2(_gridData.GetGridColumnNumber(), _gridData.GetGridRowNumber());
     }
 }
