@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] private GridData _gridData;
     [SerializeField] private ViewManager _viewManager;
+    [SerializeField] private int _playerIndex;
     [SerializeField] private int _turnNumber;
     [SerializeField] private int _numberBoxAvaiable;
 
@@ -19,9 +20,9 @@ public class GameManager : MonoBehaviour
     public void PlayerClicOnBox(int x, int y)
     {
         BoxState toSet = BoxState.Empty;
-        int player = _turnNumber % 2;
-        // print("Player : " + player);
-        switch (player)
+        _playerIndex = _turnNumber % 2;
+
+        switch (_playerIndex)
         {
             case 0:
                 toSet = BoxState.Cross;
@@ -48,8 +49,8 @@ public class GameManager : MonoBehaviour
             _viewManager.ShowDrawPanel();
         }
 
-        _turnNumber++;
         _numberBoxAvaiable--;
+        _turnNumber++;
         _viewManager.UpdateCaseVisual(args.x, args.y, args.newState);
     }
 
@@ -97,8 +98,8 @@ public class GameManager : MonoBehaviour
 
     public void ResetGrid()
     {
-        _turnNumber = 0;
         _numberBoxAvaiable = _gridData.GetGridColumnNumber() * _gridData.GetGridRowNumber();
+        _turnNumber = 0;
         _gridData.ResetGridData();
     }
 }
