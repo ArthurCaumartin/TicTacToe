@@ -8,11 +8,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GridData _gridData;
     [SerializeField] private ViewManager _viewManager;
     [SerializeField] private int _turnNumber;
-    private int _numberBoxAvaiable;
+    [SerializeField] private int _numberBoxAvaiable;
 
     void Start()
     {
-        _gridData.onBoxChangeEvent += OnBoxChange;
+        // _gridData.onBoxChangeEvent += OnBoxChange;
         _numberBoxAvaiable = _gridData.GetGridColumnNumber() * _gridData.GetGridRowNumber();
     }
 
@@ -33,7 +33,7 @@ public class GameManager : MonoBehaviour
         _gridData.SetBoxState(x, y, toSet);
     }
 
-    public void OnBoxChange(object sender, BoxChangeArgs args)
+    public void OnBoxChange(BoxChangeArgs args)
     {
         //! tej l'event et juste faire un apelle de fct
         if (CheckVictory(args.x, args.y))
@@ -44,7 +44,7 @@ public class GameManager : MonoBehaviour
 
         if (CheckNull())
         {
-            print("c pa fini");
+            print("Draw !!!");
             _viewManager.ShowDrawPanel();
         }
 
@@ -53,20 +53,11 @@ public class GameManager : MonoBehaviour
         _viewManager.UpdateCaseVisual(args.x, args.y, args.newState);
     }
 
-    private void ResetAllVisual()
-    {
-        print("Reset grid !");
-        for (int x = 0; x < _gridData.GetGridColumnNumber(); x++)
-        {
-            for (int y = 0; y < _gridData.GetGridRowNumber(); y++)
-            {
-                _viewManager.UpdateCaseVisual(x, y, BoxState.Empty);
-            }
-        }
-    }
-
     public bool CheckVictory(int x, int y)
     {
+        if(_gridData.GetBoxState(x, y) == BoxState.Empty)
+            return false;
+
         if (_gridData.GetBoxState(x, 0) == _gridData.GetBoxState(x, 1) && 
             _gridData.GetBoxState(x, 1) == _gridData.GetBoxState(x, 2))
         {
@@ -106,6 +97,8 @@ public class GameManager : MonoBehaviour
 
     public void ResetGrid()
     {
-        _gridData.ResetGrid();
+        _turnNumber = 0;
+        _numberBoxAvaiable = _gridData.GetGridColumnNumber() * _gridData.GetGridRowNumber();
+        _gridData.ResetGridData();
     }
 }

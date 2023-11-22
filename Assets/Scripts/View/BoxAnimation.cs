@@ -2,34 +2,33 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
 using UnityEngine;
+using DG.Tweening;
 
 public class BoxAnimation : MonoBehaviour
 {
-    [Header("Mouse Value :")]
-    [SerializeField] private float _mouseOverSpeed;
+    [Header("On Clic Animation :")]
+    [SerializeField] private float _onClicAnimationDuration;
+    [SerializeField] private AnimationCurve _onClicAnimationCurve;
 
-    [Header("Base Value :")]
+    [Header("Idle Aniamtion Value :")]
+    [SerializeField] private float _speed;
     [SerializeField] private float _amplitudeMax;
     [SerializeField] private float _amplitudeMin;
-    [SerializeField] private float _speedMax;
-    [SerializeField] private float _speedMin;
     [SerializeField] private float _offSetMax;
     [SerializeField] private float _offSetMin;
     
     private RectTransform _rectTransform;
-    private float _speed;
     private float _offSet;
+    private float _amplitude;
     float direction;
-
-
 
     void Start()
     {
         _rectTransform = (RectTransform)transform;
 
         _offSet = Random.Range(_offSetMin, _offSetMax);
-        _speed = Random.Range(_speedMin, _speedMax);
-        _mouseOverSpeed = 1;
+        // _speed = Random.Range(_speedMin, _speedMax);
+        _amplitude = Random.Range(_amplitudeMin, _amplitudeMax);
         direction = Random.Range(0f, 1f) > .5f ? -1 : 1;
     }
 
@@ -39,7 +38,17 @@ public class BoxAnimation : MonoBehaviour
 
         positionOffset.x = Mathf.Sin((Time.time * _speed * direction) + _offSet);
         positionOffset.y = Mathf.Cos((Time.time * _speed * direction) + _offSet);
+        positionOffset *= _amplitude;
 
         _rectTransform.localPosition = positionOffset;
     }
+
+    public void BounceAnimation()
+    {
+        DOTween.To((time) =>
+        {
+            _rectTransform.localScale = Vector3.one * time;
+        }, 0, 1, _onClicAnimationDuration)
+        .SetEase(_onClicAnimationCurve);
+    }   
 }

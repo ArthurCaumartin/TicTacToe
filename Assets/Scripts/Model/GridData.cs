@@ -21,13 +21,14 @@ public class GridData : MonoBehaviour
 
     public void SetBoxState(int x, int y, BoxState stateToSet)
     {
-        if (_grid[x, y] != BoxState.Empty)
-            return;
+        //! return si deja cross ou circle
+        // if (_grid[x, y] != BoxState.Empty)
+        //     return;
 
         _grid[x, y] = stateToSet;
-
+        _gameManager.OnBoxChange(new BoxChangeArgs(x, y, stateToSet));
         //! le "?" si onCase == null, call pas la fct
-        onBoxChangeEvent?.Invoke(this, new BoxChangeArgs(x, y, stateToSet));
+        // onBoxChangeEvent?.Invoke(this, new BoxChangeArgs(x, y, stateToSet));
     }
 
     public BoxState GetBoxState(int x, int y)
@@ -45,13 +46,13 @@ public class GridData : MonoBehaviour
         return _grid.GetLength(1);
     }
 
-    public void ResetGrid()
+    public void ResetGridData()
     {
         for (int x = 0; x < _grid.GetLength(0); x++)
             for (int y = 0; y < _grid.GetLength(1); y++)
-                SetBoxState(x, y, BoxState.Empty);
+                    _grid[x, y] = BoxState.Empty;
 
-        onBoxChangeEvent?.Invoke(this, new BoxChangeArgs(-1, -1, BoxState.Empty));
+        // onBoxChangeEvent?.Invoke(this, new BoxChangeArgs(-1, -1, BoxState.Empty));
         //! 3 premier parametre osef
     }
 }

@@ -487,10 +487,10 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 100891470}
-  - {fileID: 1304199514}
-  - {fileID: 1310523666}
   - {fileID: 154793636}
   - {fileID: 612288458}
+  - {fileID: 1304199514}
+  - {fileID: 1310523666}
   m_Father: {fileID: 1487684920}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -854,6 +854,7 @@ MonoBehaviour:
   _gridData: {fileID: 220881359}
   _viewManager: {fileID: 1487684919}
   _turnNumber: 0
+  _numberBoxAvaiable: 0
 --- !u!4 &748080125
 Transform:
   m_ObjectHideFlags: 0
@@ -953,7 +954,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -17284.361}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -22.040527, y: -28.172028}
+  m_AnchoredPosition: {x: -22.040527, y: -28.171997}
   m_SizeDelta: {x: 80.6641, y: 80.6641}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &1304199515
@@ -1000,9 +1001,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 220881359}
-        m_TargetAssemblyTypeName: GridData, Assembly-CSharp
-        m_MethodName: ResetGrid
+      - m_Target: {fileID: 1487684919}
+        m_TargetAssemblyTypeName: ViewManager, Assembly-CSharp
+        m_MethodName: ResetButtonClic
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1143,6 +1144,7 @@ MonoBehaviour:
   _buttonLayoutContainer: {fileID: 1310523667}
   _buttonPrefab: {fileID: 3490234209624225230, guid: 92ba3f427d48ce34785db23c902928ae,
     type: 3}
+  _inGamePanel: {fileID: 100891469}
   _panelVictory: {fileID: 154793635}
   _panelDraw: {fileID: 612288457}
   _circleImage: {fileID: 21300000, guid: 30ca51d9ae5257e41ad497301620f034, type: 3}
