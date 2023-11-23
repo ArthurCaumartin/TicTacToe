@@ -17,6 +17,8 @@ public class GameManager : MonoBehaviour
         _numberBoxAvaiable = _gridData.GetGridColumnNumber() * _gridData.GetGridRowNumber();
     }
 
+
+    //! Button Communication
     public void PlayerClicOnBox(int x, int y)
     {
         BoxState toSet = BoxState.Empty;
@@ -36,14 +38,13 @@ public class GameManager : MonoBehaviour
 
     public void OnBoxChange(BoxChangeArgs args)
     {
-        //! tej l'event et juste faire un apelle de fct
         if (CheckVictory(args.x, args.y))
         {
             print("GG !");
             _viewManager.ShowVictoryPanel();
         }
 
-        if (CheckNull())
+        if (CheckDraw())
         {
             print("Draw !!!");
             _viewManager.ShowDrawPanel();
@@ -54,30 +55,32 @@ public class GameManager : MonoBehaviour
         _viewManager.UpdateCaseVisual(args.x, args.y, args.newState);
     }
 
+
+    //! Game State
     public bool CheckVictory(int x, int y)
     {
-        if(_gridData.GetBoxState(x, y) == BoxState.Empty)
+        if (_gridData.GetBoxState(x, y) == BoxState.Empty)
             return false;
 
-        if (_gridData.GetBoxState(x, 0) == _gridData.GetBoxState(x, 1) && 
+        if (_gridData.GetBoxState(x, 0) == _gridData.GetBoxState(x, 1) &&
             _gridData.GetBoxState(x, 1) == _gridData.GetBoxState(x, 2))
         {
             return true;
         }
 
-        if (_gridData.GetBoxState(0, y) == _gridData.GetBoxState(1, y) && 
+        if (_gridData.GetBoxState(0, y) == _gridData.GetBoxState(1, y) &&
             _gridData.GetBoxState(1, y) == _gridData.GetBoxState(2, y))
         {
             return true;
         }
 
-        if (_gridData.GetBoxState(0, 0) != BoxState.Empty && _gridData.GetBoxState(0, 0) == _gridData.GetBoxState(1, 1) && 
+        if (_gridData.GetBoxState(0, 0) != BoxState.Empty && _gridData.GetBoxState(0, 0) == _gridData.GetBoxState(1, 1) &&
             _gridData.GetBoxState(1, 1) == _gridData.GetBoxState(2, 2))
         {
             return true;
         }
 
-        if (_gridData.GetBoxState(0, 2) != BoxState.Empty && _gridData.GetBoxState(0, 2) == _gridData.GetBoxState(1, 1) && 
+        if (_gridData.GetBoxState(0, 2) != BoxState.Empty && _gridData.GetBoxState(0, 2) == _gridData.GetBoxState(1, 1) &&
             _gridData.GetBoxState(1, 1) == _gridData.GetBoxState(2, 0))
         {
             return true;
@@ -86,20 +89,23 @@ public class GameManager : MonoBehaviour
         return false;
     }
 
-    public bool CheckNull()
+    public bool CheckDraw()
     {
         return _numberBoxAvaiable == 0;
     }
 
-    public Vector2 GetGridSize()
-    {
-        return new Vector2(_gridData.GetGridColumnNumber(), _gridData.GetGridRowNumber());
-    }
-
-    public void ResetGrid()
+    public void ResetGame()
     {
         _numberBoxAvaiable = _gridData.GetGridColumnNumber() * _gridData.GetGridRowNumber();
         _turnNumber = 0;
         _gridData.ResetGridData();
     }
+
+
+    //! Data transfere
+    public Vector2 GetGridSize()
+    {
+        return new Vector2(_gridData.GetGridColumnNumber(), _gridData.GetGridRowNumber());
+    }
+
 }

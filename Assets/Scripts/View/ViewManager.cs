@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using UnityEngine;
 using System.Threading;
 using Unity.Collections;
+using UnityEngine.UIElements.Experimental;
 
 public class ViewManager : MonoBehaviour
 {
@@ -20,28 +21,31 @@ public class ViewManager : MonoBehaviour
     [SerializeField] private Sprite _circleImage;
     [SerializeField] private Sprite _crossImage;
     [SerializeField] private Sprite _emptyImage;
-    private Vector2 _gridSize;
 
-    //! box controler pour qu'il set lui meme son sprite
     private Dictionary<(int x, int y), BoxControler> _boxControler = new Dictionary<(int x, int y), BoxControler>();
-    //? topel ?
+    private Vector2 _gridSize;
 
     void Start()
     {
-        CreateGrid();
+        CreateBoxGrid();
     }
 
-    public void ClicOnCase(int x, int y)
+
+    //! User Input
+    public void ClicOnBox(int x, int y)
     {
         //! check tour de qui dois jouer
+        _boxControler[(x, y)].SetButtonAvaiable(false);
         _gameManager.PlayerClicOnBox(x, y);
     }
 
-    private void CreateGrid()
+
+    //! Button Grid
+    private void CreateBoxGrid()
     {
         _gridSize = _gameManager.GetGridSize();
 
-        _buttonLayoutContainer.constraintCount = (int)_gridSize.x;
+        _buttonLayoutContainer.constraintCount = (int)_gridSize.y;
 
         for (int i = 0; i < _gridSize.x; i++)
         {
@@ -55,7 +59,6 @@ public class ViewManager : MonoBehaviour
                 _boxControler.Add((i, j), caseControler);
             }
         }
-        // _buttonLayoutContainer.enabled = false;
     }
 
     public void UpdateCaseVisual(int x, int y, BoxState state)
@@ -84,17 +87,19 @@ public class ViewManager : MonoBehaviour
     public void ResetButtonClic()
     {
         ShowPanelInGame();
-        _gameManager.ResetGrid();
+        _gameManager.ResetGame();
         for (int x = 0; x < _gridSize.x; x++)
         {
             for (int y = 0; y < _gridSize.y; y++)
             {
                 UpdateCaseVisual(x, y, BoxState.Empty);
-                _boxControler[(x, y)].ResetButton();
+                _boxControler[(x, y)].SetButtonAvaiable(true);
             }
         }
     }
 
+
+    //! Background
     public void ShowPanelInGame()
     {
         HideAllPanel();

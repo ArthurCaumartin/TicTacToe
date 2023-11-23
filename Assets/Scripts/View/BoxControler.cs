@@ -13,7 +13,7 @@ public class BoxControler : MonoBehaviour
 
     private ViewManager _viewManager;
     private Image _image;
-    private Button button;
+    private Button _button;
     private BoxAnimation _boxAnimation;
 
     void Start()
@@ -21,20 +21,19 @@ public class BoxControler : MonoBehaviour
         GetComponent<Button>().onClick.AddListener(OnClic);
         _viewManager = GetComponentInParent<ViewManager>();
         _image = GetComponent<Image>();
-        button = GetComponent<Button>();
+        _button = GetComponent<Button>();
         _boxAnimation = GetComponent<BoxAnimation>();
     }
 
     public void OnClic()
     {
         print("Clic on : X = " + _x + " : Y = " + _y);
-        _viewManager.ClicOnCase(_x, _y);
-        button.enabled = false;
+        _viewManager.ClicOnBox(_x, _y);
     }
 
-    public void ResetButton()
+    public void SetButtonAvaiable(bool value)
     {
-        button.enabled = true;
+        _button.enabled = value;
     }
 
     public void SetSprite(Sprite spriteToSet)

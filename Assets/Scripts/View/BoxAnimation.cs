@@ -6,7 +6,7 @@ using DG.Tweening;
 
 public class BoxAnimation : MonoBehaviour
 {
-    [Header("On Clic Animation :")]
+    [Header("Bounce Animation :")]
     [SerializeField] private float _onClicAnimationDuration;
     [SerializeField] private AnimationCurve _onClicAnimationCurve;
 
@@ -16,7 +16,7 @@ public class BoxAnimation : MonoBehaviour
     [SerializeField] private float _amplitudeMin;
     [SerializeField] private float _offSetMax;
     [SerializeField] private float _offSetMin;
-    
+
     private RectTransform _rectTransform;
     private float _offSet;
     private float _amplitude;
@@ -27,7 +27,6 @@ public class BoxAnimation : MonoBehaviour
         _rectTransform = (RectTransform)transform;
 
         _offSet = Random.Range(_offSetMin, _offSetMax);
-        // _speed = Random.Range(_speedMin, _speedMax);
         _amplitude = Random.Range(_amplitudeMin, _amplitudeMax);
         direction = Random.Range(0f, 1f) > .5f ? -1 : 1;
     }
@@ -50,5 +49,5 @@ public class BoxAnimation : MonoBehaviour
             _rectTransform.localScale = Vector3.one * time;
         }, 0, 1, _onClicAnimationDuration)
         .SetEase(_onClicAnimationCurve);
-    }   
+    }
 }
