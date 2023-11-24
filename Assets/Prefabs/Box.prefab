@@ -61,14 +61,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.19607843}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 0}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -85,7 +85,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 945755103576249385}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
@@ -103,7 +103,7 @@ MonoBehaviour:
     m_HighlightedColor: {r: 0.48166603, g: 0.8502162, b: 0.9339623, a: 0.44705883}
     m_PressedColor: {r: 0.48235294, g: 0.8509804, b: 0.93333334, a: 0.24705882}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 1, g: 1, b: 1, a: 1}
+    m_DisabledColor: {r: 1, g: 1, b: 1, a: 0.2}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -134,8 +134,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b94908522cdb464b991ee11c771e244, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _x: 0
-  _y: 0
+  _circleSprite: {fileID: 21300000, guid: 30ca51d9ae5257e41ad497301620f034, type: 3}
+  _crossSprite: {fileID: 21300000, guid: 632c4f537cebc8345bc841ff4a56b1cd, type: 3}
+  _emptySprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
 --- !u!114 &6611444102703967063
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -148,6 +149,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a55ff03de7ff98a4096187c1879dca6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _rotateSpeed: 0
+  _speed: 2
+  _amplitudeMax: 5
+  _amplitudeMin: 1
+  _offSetMax: 5
+  _offSetMin: -5
   _onClicAnimationDuration: 0.15
   _onClicAnimationCurve:
     serializedVersion: 2
@@ -191,11 +198,6 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  _speed: 2
-  _amplitudeMax: 5
-  _amplitudeMin: 1
-  _offSetMax: 5
-  _offSetMin: -5
 --- !u!1 &3490234209624225230
 GameObject:
   m_ObjectHideFlags: 0

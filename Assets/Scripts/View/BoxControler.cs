@@ -5,9 +5,13 @@ using UnityEngine.UI;
 
 public class BoxControler : MonoBehaviour
 {
-    [SerializeField] private int _x;
-    [SerializeField] private int _y;
+    [Header("Sprites : ")]
+    [SerializeField] private Sprite _circleSprite;
+    [SerializeField] private Sprite _crossSprite;
+    // [SerializeField] private Sprite _emptySprite;
 
+    private int _x;
+    private int _y;
     public int X { get { return _x; } set { _x = value; } }
     public int Y { get { return _y; } set { _y = value; } }
 
@@ -19,10 +23,12 @@ public class BoxControler : MonoBehaviour
     void Start()
     {
         GetComponent<Button>().onClick.AddListener(OnClic);
+
         _viewManager = GetComponentInParent<ViewManager>();
-        _image = GetComponent<Image>();
-        _button = GetComponent<Button>();
         _boxAnimation = GetComponent<BoxAnimation>();
+        _image = GetComponent<Image>();
+
+        _button = GetComponent<Button>();
     }
 
     public void OnClic()
@@ -31,14 +37,31 @@ public class BoxControler : MonoBehaviour
         _viewManager.ClicOnBox(_x, _y);
     }
 
-    public void SetButtonAvaiable(bool value)
+    public void UpdateBox(BoxState boxState)
     {
-        _button.enabled = value;
-    }
+        switch (boxState)
+        {
+            case BoxState.Circle:
+                _image.sprite = _circleSprite;
+                _button.enabled = false;
+                break;
 
-    public void SetSprite(Sprite spriteToSet)
-    {
-        _image.sprite = spriteToSet;
+            case BoxState.Cross:
+                _image.sprite = _crossSprite;
+                _button.enabled = false;
+                break;
+
+            case BoxState.Empty:
+                _image.sprite = null;
+                _button.enabled = true;
+                break;
+        }
         _boxAnimation.BounceAnimation();
     }
+}
+
+
+public class Animation
+{
+    //? oui !
 }

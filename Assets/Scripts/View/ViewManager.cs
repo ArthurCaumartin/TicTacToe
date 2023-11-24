@@ -17,10 +17,7 @@ public class ViewManager : MonoBehaviour
     [SerializeField] private GameObject _panelVictory;
     [SerializeField] private GameObject _panelDraw;
 
-    [Header("Sprites : ")]
-    [SerializeField] private Sprite _circleImage;
-    [SerializeField] private Sprite _crossImage;
-    [SerializeField] private Sprite _emptyImage;
+
 
     private Dictionary<(int x, int y), BoxControler> _boxControler = new Dictionary<(int x, int y), BoxControler>();
     private Vector2 _gridSize;
@@ -34,8 +31,6 @@ public class ViewManager : MonoBehaviour
     //! User Input
     public void ClicOnBox(int x, int y)
     {
-        //! check tour de qui dois jouer
-        _boxControler[(x, y)].SetButtonAvaiable(false);
         _gameManager.PlayerClicOnBox(x, y);
     }
 
@@ -52,36 +47,18 @@ public class ViewManager : MonoBehaviour
             for (int j = 0; j < _gridSize.y; j++)
             {
                 GameObject newCase = Instantiate(_buttonPrefab, _buttonLayoutContainer.transform);
-                BoxControler caseControler = newCase.GetComponentInChildren<BoxControler>();
-                caseControler.X = i;
-                caseControler.Y = j;
-
-                _boxControler.Add((i, j), caseControler);
+                BoxControler boxControler = newCase.GetComponentInChildren<BoxControler>();
+                boxControler.X = i;
+                boxControler.Y = j;
+                
+                _boxControler.Add((i, j), boxControler);
             }
         }
     }
 
-    public void UpdateCaseVisual(int x, int y, BoxState state)
+    public void UpdateBox(int x, int y, BoxState state)
     {
-        // print("Set Visual");
-        Sprite toSet = null;
-
-        switch (state)
-        {
-            case BoxState.Circle:
-                toSet = _circleImage;
-                break;
-
-            case BoxState.Cross:
-                toSet = _crossImage;
-                break;
-
-            case BoxState.Empty:
-                toSet = _emptyImage;
-                break;
-        }
-
-        _boxControler[(x, y)].SetSprite(toSet);
+        _boxControler[(x, y)].UpdateBox(state);
     }
 
     public void ResetButtonClic()
@@ -92,8 +69,7 @@ public class ViewManager : MonoBehaviour
         {
             for (int y = 0; y < _gridSize.y; y++)
             {
-                UpdateCaseVisual(x, y, BoxState.Empty);
-                _boxControler[(x, y)].SetButtonAvaiable(true);
+                UpdateBox(x, y, BoxState.Empty);
             }
         }
     }

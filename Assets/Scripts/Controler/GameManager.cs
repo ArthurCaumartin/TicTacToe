@@ -13,7 +13,6 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        // _gridData.onBoxChangeEvent += OnBoxChange;
         _numberBoxAvaiable = _gridData.GetGridColumnNumber() * _gridData.GetGridRowNumber();
     }
 
@@ -52,7 +51,7 @@ public class GameManager : MonoBehaviour
 
         _numberBoxAvaiable--;
         _turnNumber++;
-        _viewManager.UpdateCaseVisual(args.x, args.y, args.newState);
+        _viewManager.UpdateBox(args.x, args.y, args.newState);
     }
 
 
