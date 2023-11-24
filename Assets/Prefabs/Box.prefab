@@ -85,7 +85,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 945755103576249385}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
@@ -136,7 +136,76 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _circleSprite: {fileID: 21300000, guid: 30ca51d9ae5257e41ad497301620f034, type: 3}
   _crossSprite: {fileID: 21300000, guid: 632c4f537cebc8345bc841ff4a56b1cd, type: 3}
-  _emptySprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  _colorSwap:
+    _duration: 0.15
+    _curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+  _scaleBounce:
+    _duration: 0.14
+    _curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0.33152416
+        outSlope: 0.33152416
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.29894
+        value: 1.0991058
+        inSlope: -0.00007115137
+        outSlope: -0.00007115137
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.24475108
+      - serializedVersion: 3
+        time: 0.70282173
+        value: 0.8986511
+        inSlope: 0.0075284382
+        outSlope: 0.0075284382
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 1
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0.3410373
+        outSlope: 0.3410373
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
 --- !u!114 &6611444102703967063
 MonoBehaviour:
   m_ObjectHideFlags: 0
