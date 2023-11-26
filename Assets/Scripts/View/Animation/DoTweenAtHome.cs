@@ -29,7 +29,6 @@ public class DoTweenAtHome
             _factor = _curve.Evaluate(_factor);
 
             _updateAction.Invoke(_factor);
-
             if(_timeLeft < 0)
             {
                 End();
@@ -39,6 +38,6 @@ public class DoTweenAtHome
 
     void End()
     {
-        Debug.Log("Anim End !");
+        
     }
 }

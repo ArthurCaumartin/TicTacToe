@@ -10,6 +10,7 @@ public class BoxControler : MonoBehaviour
     [SerializeField] private Sprite _crossSprite;
     // [SerializeField] private Sprite _emptySprite;
     [Space]
+    [SerializeField] Gradient _colorGradient;
     [SerializeField] DoTweenAtHome _colorSwap;
     [SerializeField] DoTweenAtHome _scaleBounce;
 
@@ -26,17 +27,18 @@ public class BoxControler : MonoBehaviour
 
     void Start()
     {
-        GetComponent<Button>().onClick.AddListener(OnClic);
-
         _viewManager = GetComponentInParent<ViewManager>();
         _boxAnimation = GetComponent<BoxAnimation>();
         _image = GetComponent<Image>();
         _rectTransform = (RectTransform)transform;
 
         _button = GetComponent<Button>();
+        _button.onClick.AddListener(OnClic);
 
         _colorSwap.UpdateAction = ColorSwap;
         _scaleBounce.UpdateAction = ScaleBounce;
+
+        UpdateBox(BoxState.Empty);
     }
 
     public void OnClic()
@@ -52,13 +54,13 @@ public class BoxControler : MonoBehaviour
             case BoxState.Circle:
                 _image.sprite = _circleSprite;
                 _button.enabled = false;
-                _boxAnimation.BounceAnimation();
+                _colorSwap.Start();
                 break;
 
             case BoxState.Cross:
                 _image.sprite = _crossSprite;
                 _button.enabled = false;
-                _boxAnimation.BounceAnimation();
+                _colorSwap.Start();
                 break;
 
             case BoxState.Empty:
@@ -72,15 +74,17 @@ public class BoxControler : MonoBehaviour
     void Update()
     {
         _colorSwap.Update(Time.deltaTime);
+        _scaleBounce.Update(Time.deltaTime);
     }
 
     public void ScaleBounce(float time)
     {
+        print("Scale !");
         _rectTransform.localScale = Vector3.one * time;
     }
 
     public void ColorSwap(float time)
     {
-        _image.color = Color.Lerp(Color.red, Color.blue, time);
+        _image.color = _colorGradient.Evaluate(time);
     }
 }
