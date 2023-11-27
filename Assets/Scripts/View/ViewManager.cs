@@ -17,8 +17,6 @@ public class ViewManager : MonoBehaviour
     [SerializeField] private GameObject _panelVictory;
     [SerializeField] private GameObject _panelDraw;
 
-
-
     private Dictionary<(int x, int y), BoxControler> _boxControler = new Dictionary<(int x, int y), BoxControler>();
     private Vector2 _gridSize;
 
@@ -74,6 +72,16 @@ public class ViewManager : MonoBehaviour
         }
     }
 
+    void DisableAllButton()
+    {
+        for (int x = 0; x < _gridSize.x; x++)
+        {
+            for (int y = 0; y < _gridSize.y; y++)
+            {
+                _boxControler[(x, y)].SetButtonValue(false);
+            }
+        }
+    }
 
     //! Background
     public void ShowPanelInGame()
@@ -84,12 +92,14 @@ public class ViewManager : MonoBehaviour
 
     public void ShowVictoryPanel()
     {
+        DisableAllButton();
         HideAllPanel();
         _panelVictory.SetActive(true);
     }
 
     public void ShowDrawPanel()
     {
+        DisableAllButton();
         HideAllPanel();
         _panelDraw.SetActive(true);
     }

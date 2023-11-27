@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
+using Unity.VisualScripting.Dependencies.NCalc;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -22,21 +24,25 @@ public class BoxControler : MonoBehaviour
     private ViewManager _viewManager;
     private Image _image;
     private Button _button;
-    private BoxAnimation _boxAnimation;
     private RectTransform _rectTransform;
+    private Color _colorStartBackup;
 
     void Start()
     {
         _viewManager = GetComponentInParent<ViewManager>();
-        _boxAnimation = GetComponent<BoxAnimation>();
+
         _image = GetComponent<Image>();
+        _colorStartBackup = _image.color;
+
         _rectTransform = (RectTransform)transform;
 
         _button = GetComponent<Button>();
         _button.onClick.AddListener(OnClic);
 
-        _colorSwap.UpdateAction = ColorSwap;
-        _scaleBounce.UpdateAction = ScaleBounce;
+        _colorSwap.UpdateAction = ColorSwapUpdate;
+
+        _scaleBounce.UpdateAction = ScaleBounceUpdate;
+        _scaleBounce.EndAction = EndBounceAnimation;
 
         UpdateBox(BoxState.Empty);
     }
@@ -47,8 +53,14 @@ public class BoxControler : MonoBehaviour
         _viewManager.ClicOnBox(_x, _y);
     }
 
+    public void SetButtonValue(bool value)
+    {
+        _button.enabled = value;
+    }
+
     public void UpdateBox(BoxState boxState)
     {
+        _colorSwap.EndAnimation();
         switch (boxState)
         {
             case BoxState.Circle:
@@ -65,7 +77,8 @@ public class BoxControler : MonoBehaviour
 
             case BoxState.Empty:
                 _image.sprite = null;
-                _button.enabled = true;
+                _image.color = _colorStartBackup;
+                SetButtonValue(true);
                 break;
         }
         _scaleBounce.Start();
@@ -77,13 +90,18 @@ public class BoxControler : MonoBehaviour
         _scaleBounce.Update(Time.deltaTime);
     }
 
-    public void ScaleBounce(float time)
+    void ScaleBounceUpdate(float time)
     {
         print("Scale !");
         _rectTransform.localScale = Vector3.one * time;
     }
 
-    public void ColorSwap(float time)
+    void EndBounceAnimation()
+    {
+        _rectTransform.localScale = Vector3.one;
+    }
+
+    public void ColorSwapUpdate(float time)
     {
         _image.color = _colorGradient.Evaluate(time);
     }
