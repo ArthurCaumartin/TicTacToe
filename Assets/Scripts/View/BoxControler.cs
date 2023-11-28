@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
-using Unity.VisualScripting.Dependencies.NCalc;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -59,7 +55,6 @@ public class BoxControler : MonoBehaviour
 
     public void OnClic()
     {
-        print("Clic on : X = " + _x + " : Y = " + _y);
         _viewManager.ClicOnBox(_x, _y);
     }
 
@@ -89,6 +84,7 @@ public class BoxControler : MonoBehaviour
                 _image.sprite = null;
                 _image.color = _colorStartBackup;
                 SetButtonValue(true);
+                CircleMoveAnimationStart();
                 break;
         }
         _scaleBounce.Start();
@@ -121,7 +117,7 @@ public class BoxControler : MonoBehaviour
 
     void ScaleBounceUpdate(float time)
     {
-        print("Scale !");
+        // print("Scale !");
         _rectTransform.localScale = Vector3.one * time;
     }
 

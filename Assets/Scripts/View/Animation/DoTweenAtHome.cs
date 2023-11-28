@@ -1,15 +1,5 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
-// public Class AnimationParameter
-// {
-//     public float minSpeed;
-//     public float maxSpeed;
-//     public float maxOffSet;
-//     public float minOffSet;
-// }
 
 [Serializable]
 public class DoTweenAtHome

@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -11,6 +8,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int _turnNumber;
     [SerializeField] private int _numberBoxAvaiable;
     private Vector2 _gridSize;
+    private VictoryChecker3x3 victoryChecker = new VictoryChecker3x3();
 
     void Start()
     {
@@ -24,6 +22,7 @@ public class GameManager : MonoBehaviour
     {
         BoxState toSet = BoxState.Empty;
         _playerIndex = _turnNumber % 2;
+        print("Player index : " + _playerIndex);
 
         switch (_playerIndex)
         {
@@ -39,71 +38,24 @@ public class GameManager : MonoBehaviour
 
     public void OnBoxChange(BoxChangeArgs args)
     {
-        if(CheckVictoryDy(args.x, args.y))
-        {
-            print("Victory !");
-        }
-        // if (CheckVictory(args.x, args.y))
-        // {
-        //     print("GG !");
-        //     _viewManager.ShowVictoryPanel();
-        // }
-
-        // if (CheckDraw())
-        // {
-        //     print("Draw !!!");
-        //     _viewManager.ShowDrawPanel();
-        // }
-
         _numberBoxAvaiable--;
         _turnNumber++;
         _viewManager.UpdateBox(args.x, args.y, args.newState);
+        WinCheck(args.x, args.y);
     }
 
-
-    //! Game State
-
-    bool CheckVictoryDy(int x, int y)
+    //! Game State  
+    void WinCheck(int x, int y)
     {
-        if(x + 2 <= _gridSize.x)
+        if (CheckDraw())
         {
-
+            _viewManager.ShowDrawPanel();
         }
 
-
-        return false;
-    }
-    
-    bool CheckVictory(int x, int y)
-    {
-        if (_gridData.GetBoxState(x, y) == BoxState.Empty)
-            return false;
-
-        if (_gridData.GetBoxState(x, 0) == _gridData.GetBoxState(x, 1) &&
-            _gridData.GetBoxState(x, 1) == _gridData.GetBoxState(x, 2))
+        if (victoryChecker.Check(x, y, _gridData))
         {
-            return true;
+            _viewManager.ShowVictoryPanel();
         }
-
-        if (_gridData.GetBoxState(0, y) == _gridData.GetBoxState(1, y) &&
-            _gridData.GetBoxState(1, y) == _gridData.GetBoxState(2, y))
-        {
-            return true;
-        }
-
-        if (_gridData.GetBoxState(0, 0) != BoxState.Empty && _gridData.GetBoxState(0, 0) == _gridData.GetBoxState(1, 1) &&
-            _gridData.GetBoxState(1, 1) == _gridData.GetBoxState(2, 2))
-        {
-            return true;
-        }
-
-        if (_gridData.GetBoxState(0, 2) != BoxState.Empty && _gridData.GetBoxState(0, 2) == _gridData.GetBoxState(1, 1) &&
-            _gridData.GetBoxState(1, 1) == _gridData.GetBoxState(2, 0))
-        {
-            return true;
-        }
-
-        return false;
     }
 
     bool CheckDraw()
@@ -123,5 +75,10 @@ public class GameManager : MonoBehaviour
     public Vector2 GetGridSize()
     {
         return new Vector2(_gridData.GetGridColumnNumber(), _gridData.GetGridRowNumber());
+    }
+
+    public int GetPlayerIndex()
+    {
+        return _playerIndex;
     }
 }
