@@ -12,12 +12,18 @@ public class BoxControler : MonoBehaviour
     [SerializeField] private Sprite _crossSprite;
     // [SerializeField] private Sprite _emptySprite;
     [Space]
-    [SerializeField] Gradient _colorGradient;
-    [SerializeField] DoTweenAtHome _colorSwap;
-    [SerializeField] DoTweenAtHome _scaleBounce;
-
-    private int _x;
-    private int _y;
+    [SerializeField] private Gradient _colorGradient;
+    [SerializeField] private DoTweenAtHome _colorSwap;
+    [SerializeField] private DoTweenAtHome _scaleBounce;
+    [Space]
+    [SerializeField] private float _circleMoveSpeed;
+    [SerializeField] private float _circleMoveAmplitudeMin;
+    [SerializeField] private float _circleMoveAmplitudeMax;
+    [SerializeField] private float _circleMoveOffSetMin;
+    [SerializeField] private float _circleMoveOffSetMax;
+    [Space]
+    [SerializeField] private int _x;
+    [SerializeField] private int _y;
     public int X { get { return _x; } set { _x = value; } }
     public int Y { get { return _y; } set { _y = value; } }
 
@@ -26,6 +32,9 @@ public class BoxControler : MonoBehaviour
     private Button _button;
     private RectTransform _rectTransform;
     private Color _colorStartBackup;
+    private float _circleAmplitude;
+    private float _circleOffset;
+    private float _circleAnimationDirection;
 
     void Start()
     {
@@ -45,6 +54,7 @@ public class BoxControler : MonoBehaviour
         _scaleBounce.EndAction = EndBounceAnimation;
 
         UpdateBox(BoxState.Empty);
+        CircleMoveAnimationStart();
     }
 
     public void OnClic()
@@ -88,6 +98,25 @@ public class BoxControler : MonoBehaviour
     {
         _colorSwap.Update(Time.deltaTime);
         _scaleBounce.Update(Time.deltaTime);
+        CicleMoveAnimationUpdate(Time.time);
+    }
+
+    void CircleMoveAnimationStart()
+    {
+        _circleOffset = Random.Range(_circleMoveOffSetMin, _circleMoveOffSetMax);
+        _circleAmplitude = Random.Range(_circleMoveAmplitudeMin, _circleMoveAmplitudeMax);
+        _circleAnimationDirection = Random.Range(0f, 1f) > .5f ? -1 : 1;
+    }
+
+    void CicleMoveAnimationUpdate(float time)
+    {
+        Vector3 positionOffset = Vector3.zero;
+
+        positionOffset.x = Mathf.Sin((time * _circleMoveSpeed * _circleAnimationDirection) + _circleOffset);
+        positionOffset.y = Mathf.Cos((time * _circleMoveSpeed * _circleAnimationDirection) + _circleOffset);
+        positionOffset *= _circleAmplitude;
+
+        _rectTransform.localPosition = positionOffset;
     }
 
     void ScaleBounceUpdate(float time)
@@ -101,7 +130,7 @@ public class BoxControler : MonoBehaviour
         _rectTransform.localScale = Vector3.one;
     }
 
-    public void ColorSwapUpdate(float time)
+    void ColorSwapUpdate(float time)
     {
         _image.color = _colorGradient.Evaluate(time);
     }

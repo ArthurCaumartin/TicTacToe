@@ -5,6 +5,7 @@ using UnityEngine;
 using System.Threading;
 using Unity.Collections;
 using UnityEngine.UIElements.Experimental;
+using Unity.VisualScripting;
 
 public class ViewManager : MonoBehaviour
 {
@@ -19,9 +20,11 @@ public class ViewManager : MonoBehaviour
 
     private Dictionary<(int x, int y), BoxControler> _boxControler = new Dictionary<(int x, int y), BoxControler>();
     private Vector2 _gridSize;
+    private RectTransform _layoutRect;
 
     void Start()
     {
+        _layoutRect = (RectTransform)_buttonLayoutContainer.transform;
         CreateBoxGrid();
     }
 
@@ -32,24 +35,34 @@ public class ViewManager : MonoBehaviour
         _gameManager.PlayerClicOnBox(x, y);
     }
 
+    public Vector2 _cellSize;
 
     //! Button Grid
+    public float spacingRatio;
     private void CreateBoxGrid()
     {
         _gridSize = _gameManager.GetGridSize();
+        float maxGridValue = Mathf.Max(_gridSize.x, _gridSize.y);
 
-        _buttonLayoutContainer.constraintCount = (int)_gridSize.y;
+        _buttonLayoutContainer.constraintCount = (int)_gridSize.x;
 
-        for (int i = 0; i < _gridSize.x; i++)
+        _cellSize = new Vector2(_layoutRect.rect.width / maxGridValue, _layoutRect.rect.height / maxGridValue);
+        Vector2 cellSizeRatio = _cellSize * spacingRatio;
+        _buttonLayoutContainer.cellSize = cellSizeRatio;
+
+        //? (1 - "ratio") = prend l'inverse du ratio
+        _buttonLayoutContainer.spacing = _cellSize * (1 - spacingRatio);
+
+        for (int y = 0; y < _gridSize.y; y++)
         {
-            for (int j = 0; j < _gridSize.y; j++)
+            for (int x = 0; x < _gridSize.x; x++)
             {
                 GameObject newCase = Instantiate(_buttonPrefab, _buttonLayoutContainer.transform);
                 BoxControler boxControler = newCase.GetComponentInChildren<BoxControler>();
-                boxControler.X = i;
-                boxControler.Y = j;
-                
-                _boxControler.Add((i, j), boxControler);
+                boxControler.X = x;
+                boxControler.Y = y;
+
+                _boxControler.Add((x, y), boxControler);
             }
         }
     }

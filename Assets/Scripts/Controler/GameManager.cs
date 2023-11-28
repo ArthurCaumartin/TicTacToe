@@ -10,10 +10,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int _playerIndex;
     [SerializeField] private int _turnNumber;
     [SerializeField] private int _numberBoxAvaiable;
+    private Vector2 _gridSize;
 
     void Start()
     {
         _numberBoxAvaiable = _gridData.GetGridColumnNumber() * _gridData.GetGridRowNumber();
+        _gridSize = GetGridSize();
     }
 
 
@@ -37,17 +39,21 @@ public class GameManager : MonoBehaviour
 
     public void OnBoxChange(BoxChangeArgs args)
     {
-        if (CheckVictory(args.x, args.y))
+        if(CheckVictoryDy(args.x, args.y))
         {
-            print("GG !");
-            _viewManager.ShowVictoryPanel();
+            print("Victory !");
         }
+        // if (CheckVictory(args.x, args.y))
+        // {
+        //     print("GG !");
+        //     _viewManager.ShowVictoryPanel();
+        // }
 
-        if (CheckDraw())
-        {
-            print("Draw !!!");
-            _viewManager.ShowDrawPanel();
-        }
+        // if (CheckDraw())
+        // {
+        //     print("Draw !!!");
+        //     _viewManager.ShowDrawPanel();
+        // }
 
         _numberBoxAvaiable--;
         _turnNumber++;
@@ -56,7 +62,19 @@ public class GameManager : MonoBehaviour
 
 
     //! Game State
-    public bool CheckVictory(int x, int y)
+
+    bool CheckVictoryDy(int x, int y)
+    {
+        if(x + 2 <= _gridSize.x)
+        {
+
+        }
+
+
+        return false;
+    }
+    
+    bool CheckVictory(int x, int y)
     {
         if (_gridData.GetBoxState(x, y) == BoxState.Empty)
             return false;
@@ -88,7 +106,7 @@ public class GameManager : MonoBehaviour
         return false;
     }
 
-    public bool CheckDraw()
+    bool CheckDraw()
     {
         return _numberBoxAvaiable == 0;
     }
@@ -106,5 +124,4 @@ public class GameManager : MonoBehaviour
     {
         return new Vector2(_gridData.GetGridColumnNumber(), _gridData.GetGridRowNumber());
     }
-
 }

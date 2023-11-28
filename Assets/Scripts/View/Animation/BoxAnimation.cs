@@ -39,8 +39,8 @@ public class BoxAnimation : MonoBehaviour
         if(_rotateSpeed != 0)
             RotateAnimation();
 
-        if(_speed != 0)
-            CircleMoveAnimation();
+        // if(_speed != 0)
+        //     CircleMoveAnimation();
     }
 
     private void RotateAnimation()

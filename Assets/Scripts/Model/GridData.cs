@@ -1,11 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
-[System.Serializable]
+[Serializable]
 public enum BoxState
 {
     Empty,
@@ -15,10 +13,15 @@ public enum BoxState
 
 public class GridData : MonoBehaviour
 {
-    private BoxState[,] _grid = new BoxState[3, 3];
     [SerializeField] private GameManager _gameManager;
+    [SerializeField] private Vector2Int _gridSize;
+    private BoxState[,] _grid;
     public event EventHandler<BoxChangeArgs> onBoxChangeEvent;
 
+    void Awake()
+    {
+        _grid = new BoxState[_gridSize.x, _gridSize.y];
+    }
 
     //! Grid Interaction
     public void SetBoxState(int x, int y, BoxState stateToSet)
