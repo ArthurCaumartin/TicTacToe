@@ -39,8 +39,8 @@ public class BoxAnimation : MonoBehaviour
         if(_rotateSpeed != 0)
             RotateAnimation();
 
-        // if(_speed != 0)
-        //     CircleMoveAnimation();
+        if(_speed != 0)
+            CircleMoveAnimation();
     }
 
     private void RotateAnimation()
@@ -56,7 +56,7 @@ public class BoxAnimation : MonoBehaviour
         positionOffset.y = Mathf.Cos((Time.time * _speed * direction) + _offSet);
         positionOffset *= _amplitude;
 
-        _rectTransform.localPosition = positionOffset;
+        _rectTransform.anchoredPosition = positionOffset;
     }
 
     public void BounceAnimation()

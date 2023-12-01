@@ -46,7 +46,7 @@ public class GridData : MonoBehaviour
 
 
     //! Get Data
-    public BoxState GetBoxState(int x, int y)
+    public BoxState GetState(int x, int y)
     {
         return _grid[x, y];
     }
@@ -59,6 +59,11 @@ public class GridData : MonoBehaviour
     public int GetGridRowNumber()
     {
         return _grid.GetLength(1);
+    }
+
+    public Vector2 GetGridSize()
+    {
+        return _gridSize;
     }
 }
 

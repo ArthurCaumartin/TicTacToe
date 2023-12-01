@@ -7,13 +7,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int _playerIndex;
     [SerializeField] private int _turnNumber;
     [SerializeField] private int _numberBoxAvaiable;
-    private Vector2 _gridSize;
     private VictoryChecker3x3 victoryChecker = new VictoryChecker3x3();
 
     void Start()
     {
         _numberBoxAvaiable = _gridData.GetGridColumnNumber() * _gridData.GetGridRowNumber();
-        _gridSize = GetGridSize();
     }
 
 

@@ -1,7 +1,8 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class BoxControler : MonoBehaviour
+public class BoxControler : MonoBehaviour , IPointerEnterHandler , IPointerExitHandler
 {
     [Header("Sprites : ")]
     [SerializeField] private Sprite _circleSprite;
@@ -61,6 +62,7 @@ public class BoxControler : MonoBehaviour
     public void SetButtonValue(bool value)
     {
         _button.enabled = value;
+        _image.raycastTarget = value;
     }
 
     public void UpdateBox(BoxState boxState)
@@ -70,14 +72,14 @@ public class BoxControler : MonoBehaviour
         {
             case BoxState.Circle:
                 _image.sprite = _circleSprite;
-                _button.enabled = false;
                 _colorSwap.Start();
+                SetButtonValue(false);
                 break;
 
             case BoxState.Cross:
                 _image.sprite = _crossSprite;
-                _button.enabled = false;
                 _colorSwap.Start();
+                SetButtonValue(false);
                 break;
 
             case BoxState.Empty:
@@ -129,5 +131,15 @@ public class BoxControler : MonoBehaviour
     void ColorSwapUpdate(float time)
     {
         _image.color = _colorGradient.Evaluate(time);
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        _viewManager.SetPreviewFormTarget(_rectTransform);
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        _viewManager.SetPreviewFormTarget(null);
     }
 }
