@@ -244,7 +244,7 @@ MonoBehaviour:
         time: 0
         value: 0
         inSlope: 0
-        outSlope: 1
+        outSlope: 0
         tangentMode: 0
         weightedMode: 0
         inWeight: 0
@@ -252,15 +252,49 @@ MonoBehaviour:
       - serializedVersion: 3
         time: 1
         value: 1
-        inSlope: 1
-        outSlope: 0
+        inSlope: 2.7444868
+        outSlope: 2.7444868
         tangentMode: 0
         weightedMode: 0
-        inWeight: 0
+        inWeight: 0.040736675
         outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
+  _removeAnimationDirectionAmplitude: 500
+  _fallingFactorCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: -0.0000040344894
+      value: -0.0000009359792
+      inSlope: -2.0292385
+      outSlope: -2.0292385
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 1
+    - serializedVersion: 3
+      time: 0.1313923
+      value: -0.2404055
+      inSlope: -0.078862675
+      outSlope: -0.078862675
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 1
+      outWeight: 0.17917275
+    - serializedVersion: 3
+      time: 1.0241498
+      value: 1.7705531
+      inSlope: 2.3475864
+      outSlope: 2.3475864
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.09264616
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   _circleMoveSpeed: 2
   _circleMoveAmplitudeMin: 1
   _circleMoveAmplitudeMax: 5

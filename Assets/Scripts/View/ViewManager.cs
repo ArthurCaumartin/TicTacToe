@@ -23,6 +23,8 @@ public class ViewManager : MonoBehaviour
     [Space]
     [SerializeField] private RectTransform _previewForm;
     [SerializeField] private float _previewFormFadeSpeed;
+    [Space]
+    [SerializeField] private DoTweenAtHome _removeBoxAnimation;
 
 
     private Dictionary<(int x, int y), BoxControler> _boxControler = new Dictionary<(int x, int y), BoxControler>();
@@ -33,6 +35,7 @@ public class ViewManager : MonoBehaviour
     private Image _previewFormImage;
     private Vector2 _layoutCellSizeRatio;
     private Vector3 _previewFormVelocity = Vector3.zero;
+    private float _removeAnimationTimeSpend;
     const float SPACING_RATIO = 0.8f;
 
 
@@ -42,11 +45,15 @@ public class ViewManager : MonoBehaviour
         _previewFormImage = _previewForm.GetComponent<Image>();
         CreateBoxGrid();
         HideTurnItem(_circleRect);
+
+        _removeBoxAnimation.StartAction = RemoveBoxStart;
+        _removeBoxAnimation.UpdateAction = RemoveBoxUpdate;
     }
 
     void Update()
     {
         UpdatePreviewForm();
+        _removeBoxAnimation.Update(Time.deltaTime);
     }
 
 
@@ -139,17 +146,45 @@ public class ViewManager : MonoBehaviour
         }
     }
 
+
+
     void RemoveAllEmptyBox()
     {
-        for (int x = 0; x < _gridSize.x; x++)
+        _removeBoxAnimation.Start();
+    }
+
+    void RemoveBoxStart()
+    {
+        _removeAnimationTimeSpend = 0;
+    }
+
+
+    int _removeXIndex;
+
+    void RemoveBoxUpdate(float time)
+    {
+        float callThresold = _removeBoxAnimation.Duration / (_gridSize.x + 1);
+        print(callThresold);
+        _removeAnimationTimeSpend += Time.deltaTime;
+
+        if (_removeAnimationTimeSpend >= callThresold)
         {
-            for (int y = 0; y < _gridSize.y; y++)
+            _removeAnimationTimeSpend = 0;
+            for (int i = 0; i < _gridSize.y; i++)
             {
-                if(_gameManager.GetBoxState(x, y) == BoxState.Empty)
-                    _boxControler[(x, y)].PlayRemoveAnimation();
+                RemoveBox(_removeXIndex, i);
             }
+            // RemoveBox(removeXIndex, removeYIndex);
+            _removeXIndex++;
         }
     }
+
+    void RemoveBox(int x, int y)
+    {
+        if (_gameManager.GetBoxState(x, y) == BoxState.Empty)
+            _boxControler[(x, y)].PlayRemoveAnimation();
+    }
+
 
     //! Background / UI Element
     void UpdatePreviewForm()
@@ -157,12 +192,12 @@ public class ViewManager : MonoBehaviour
         Color colorTarget = Color.white;
         Vector2 target = Vector2.zero;
 
-        if(_previewFormTarget)
+        if (_previewFormTarget)
         {
             target = _previewFormTarget.position;
             colorTarget.a = .8f;
         }
-        else if(!_previewFormTarget)
+        else if (!_previewFormTarget)
         {
             target = Input.mousePosition;
             colorTarget.a = 0f;
@@ -181,12 +216,12 @@ public class ViewManager : MonoBehaviour
     {
         switch (justPlayState)
         {
-            case BoxState.Cross :
+            case BoxState.Cross:
                 _previewFormImage.sprite = _circleSprite;
-            break;
-            case BoxState.Circle :
+                break;
+            case BoxState.Circle:
                 _previewFormImage.sprite = _crossSprite;
-            break;
+                break;
         }
     }
 
@@ -223,6 +258,7 @@ public class ViewManager : MonoBehaviour
         DisableAllButton();
         HideAllPanel();
         RemoveAllEmptyBox();
+
         _panelVictory.SetActive(true);
         HideTurnItem(_circleRect);
         HideTurnItem(_crossRect);

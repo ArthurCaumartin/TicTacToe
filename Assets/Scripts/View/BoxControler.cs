@@ -14,6 +14,8 @@ public class BoxControler : MonoBehaviour , IPointerEnterHandler , IPointerExitH
     [SerializeField] private DoTweenAtHome _colorSwap;
     [SerializeField] private DoTweenAtHome _scaleBounce;
     [SerializeField] private DoTweenAtHome _removeAnimation;
+    [SerializeField] private float _removeAnimationDirectionAmplitude;
+    [SerializeField] private AnimationCurve _fallingFactorCurve;
     
     [Header("Circle Move Animation :")]
     [SerializeField] private float _circleMoveSpeed;
@@ -36,6 +38,8 @@ public class BoxControler : MonoBehaviour , IPointerEnterHandler , IPointerExitH
     private float _circleOffset;
     private float _circleAnimationDirection;
     private Vector2 _removeAnimationStartPosition;
+    private Vector2 _removeAnimationDirection;
+    private bool _isRunningIdleAnimation = true;
 
     void Start()
     {
@@ -91,10 +95,13 @@ public class BoxControler : MonoBehaviour , IPointerEnterHandler , IPointerExitH
                 break;
 
             case BoxState.Empty:
-                _image.sprite = null;
-                _image.color = _colorStartBackup;
-                SetButtonValue(true);
-                CircleMoveAnimationStart();
+                ResetAnimation(() => 
+                {
+                    _image.sprite = null;
+                    _image.color = _colorStartBackup;
+                    SetButtonValue(true);
+                    CircleMoveAnimationStart();
+                });
                 break;
         }
         _scaleBounce.Start();
@@ -104,11 +111,15 @@ public class BoxControler : MonoBehaviour , IPointerEnterHandler , IPointerExitH
     {
         _colorSwap.Update(Time.deltaTime);
         _scaleBounce.Update(Time.deltaTime);
-        CicleMoveAnimationUpdate(Time.time);
+        _removeAnimation.Update(Time.deltaTime);
+
+        if(_isRunningIdleAnimation)
+            CicleMoveAnimationUpdate(Time.time);
     }
 
     void CircleMoveAnimationStart()
     {
+        _isRunningIdleAnimation = true;
         _circleOffset = Random.Range(_circleMoveOffSetMin, _circleMoveOffSetMax);
         _circleAmplitude = Random.Range(_circleMoveAmplitudeMin, _circleMoveAmplitudeMax);
         _circleAnimationDirection = Random.Range(0f, 1f) > .5f ? -1 : 1;
@@ -160,23 +171,34 @@ public class BoxControler : MonoBehaviour , IPointerEnterHandler , IPointerExitH
 
     public void PlayRemoveAnimation()
     {
-        print("RemoveAnimation Start !");
+        // print("RemoveAnimation Start !");
         _removeAnimation.Start();
+
     }
 
     void RemoveAnimationStart()
     {
         _removeAnimationStartPosition = _rectTransform.localPosition;
-        print(_removeAnimationStartPosition);
+        _removeAnimationDirection = Random.insideUnitCircle.normalized * _removeAnimationDirectionAmplitude;
+        _isRunningIdleAnimation = false;
+        // print(_removeAnimationStartPosition);
     }
 
     void RemoveAnimationUpdate(float time)
     {
-        print("RemoveAnimation Update !");
-        // Vector2 direction = Random.insideUnitCircle.normalized;
-        float fallingDistance = Camera.main.pixelHeight;
+        Vector2 newPosition = _removeAnimationStartPosition + (_removeAnimationDirection * time);
+        newPosition.y = Mathf.LerpUnclamped(newPosition.y, -Camera.main.pixelHeight / 2, _fallingFactorCurve.Evaluate(time));
+        _rectTransform.localPosition = newPosition;
+    }
 
-        Vector3 newPosition = _rectTransform.localPosition;
-        newPosition.y = Mathf.Lerp(_removeAnimationStartPosition.y, fallingDistance, time);
+    void ResetAnimation(System.Action endAction)
+    {
+        Vector2 startPosition = _rectTransform.localPosition;
+        DOTween.To((time) =>
+        {
+            _rectTransform.localPosition = Vector2.Lerp(startPosition, Vector2.zero, time);
+        }, 0, 1, .5f)
+        .SetEase(Ease.Linear)
+        .OnComplete(() => {endAction.Invoke();});
     }
 }

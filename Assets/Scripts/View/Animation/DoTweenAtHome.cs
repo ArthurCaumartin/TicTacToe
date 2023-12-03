@@ -8,6 +8,7 @@ public class DoTweenAtHome
     [SerializeField] private AnimationCurve _curve = AnimationCurve.Linear(0, 0, 1, 1);
     private float _timeLeft;
     private float _factor;
+    private float _timeSpend;
 
     private Action<float> _updateAction;
     private Action _startAction;
@@ -15,7 +16,8 @@ public class DoTweenAtHome
     public Action<float> UpdateAction { set => _updateAction = value; }
     public Action StartAction { set => _startAction = value; }
     public Action EndAction { set => _endAction = value; }
-    public float Duration { get => _duration; set => _duration = value; }
+    public float Duration { get => _duration; }
+    public float TimeSpend { get => _timeSpend; }
 
     [ContextMenu("StartAnim")]
     public void Start()
@@ -29,6 +31,7 @@ public class DoTweenAtHome
         if(_timeLeft > 0)
         {
             _timeLeft -= deltaTime;
+            _timeSpend += deltaTime;
 
             _factor = 1 - (_timeLeft / Duration);
             _factor = _curve.Evaluate(_factor);
