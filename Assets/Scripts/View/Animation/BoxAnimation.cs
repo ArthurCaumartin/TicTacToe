@@ -20,6 +20,7 @@ public class BoxAnimation : MonoBehaviour
     [SerializeField] private float _onClicAnimationDuration;
     [SerializeField] private AnimationCurve _onClicAnimationCurve;
 
+
     private RectTransform _rectTransform;
     private float _offSet;
     private float _amplitude;
@@ -67,4 +68,6 @@ public class BoxAnimation : MonoBehaviour
         }, 0, 1, _onClicAnimationDuration)
         .SetEase(_onClicAnimationCurve);
     }
+
+
 }

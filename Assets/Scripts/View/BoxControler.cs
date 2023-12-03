@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -12,7 +13,9 @@ public class BoxControler : MonoBehaviour , IPointerEnterHandler , IPointerExitH
     [SerializeField] private Gradient _colorGradient;
     [SerializeField] private DoTweenAtHome _colorSwap;
     [SerializeField] private DoTweenAtHome _scaleBounce;
-    [Space]
+    [SerializeField] private DoTweenAtHome _removeAnimation;
+    
+    [Header("Circle Move Animation :")]
     [SerializeField] private float _circleMoveSpeed;
     [SerializeField] private float _circleMoveAmplitudeMin;
     [SerializeField] private float _circleMoveAmplitudeMax;
@@ -32,6 +35,7 @@ public class BoxControler : MonoBehaviour , IPointerEnterHandler , IPointerExitH
     private float _circleAmplitude;
     private float _circleOffset;
     private float _circleAnimationDirection;
+    private Vector2 _removeAnimationStartPosition;
 
     void Start()
     {
@@ -45,7 +49,11 @@ public class BoxControler : MonoBehaviour , IPointerEnterHandler , IPointerExitH
         _button = GetComponent<Button>();
         _button.onClick.AddListener(OnClic);
 
+
         _colorSwap.UpdateAction = ColorSwapUpdate;
+
+        _removeAnimation.StartAction = RemoveAnimationStart;
+        _removeAnimation.UpdateAction = RemoveAnimationUpdate;
 
         _scaleBounce.UpdateAction = ScaleBounceUpdate;
         _scaleBounce.EndAction = EndBounceAnimation;
@@ -109,11 +117,18 @@ public class BoxControler : MonoBehaviour , IPointerEnterHandler , IPointerExitH
     void CicleMoveAnimationUpdate(float time)
     {
         Vector3 positionOffset = Vector3.zero;
+        Vector3 rotationOffset = Vector3.zero;
 
-        positionOffset.x = Mathf.Sin((time * _circleMoveSpeed * _circleAnimationDirection) + _circleOffset);
-        positionOffset.y = Mathf.Cos((time * _circleMoveSpeed * _circleAnimationDirection) + _circleOffset);
+        float sinFactor = Mathf.Sin((time * _circleMoveSpeed * _circleAnimationDirection) + _circleOffset);
+        float cosFactor = Mathf.Cos((time * _circleMoveSpeed * _circleAnimationDirection) + _circleOffset);
+
+        positionOffset.x = sinFactor;
+        positionOffset.y = cosFactor;
         positionOffset *= _circleAmplitude;
 
+        rotationOffset.z = sinFactor * _circleAmplitude;
+
+        _rectTransform.rotation = Quaternion.Euler(rotationOffset);
         _rectTransform.localPosition = positionOffset;
     }
 
@@ -141,5 +156,27 @@ public class BoxControler : MonoBehaviour , IPointerEnterHandler , IPointerExitH
     public void OnPointerExit(PointerEventData eventData)
     {
         _viewManager.SetPreviewFormTarget(null);
+    }
+
+    public void PlayRemoveAnimation()
+    {
+        print("RemoveAnimation Start !");
+        _removeAnimation.Start();
+    }
+
+    void RemoveAnimationStart()
+    {
+        _removeAnimationStartPosition = _rectTransform.localPosition;
+        print(_removeAnimationStartPosition);
+    }
+
+    void RemoveAnimationUpdate(float time)
+    {
+        print("RemoveAnimation Update !");
+        // Vector2 direction = Random.insideUnitCircle.normalized;
+        float fallingDistance = Camera.main.pixelHeight;
+
+        Vector3 newPosition = _rectTransform.localPosition;
+        newPosition.y = Mathf.Lerp(_removeAnimationStartPosition.y, fallingDistance, time);
     }
 }

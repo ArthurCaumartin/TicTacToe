@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
     {
         BoxState toSet = BoxState.Empty;
         _playerIndex = _turnNumber % 2;
-        print("Player index : " + _playerIndex);
+        // print("Player index : " + _playerIndex);
 
         switch (_playerIndex)
         {
@@ -73,6 +73,11 @@ public class GameManager : MonoBehaviour
     public Vector2 GetGridSize()
     {
         return new Vector2(_gridData.GetGridColumnNumber(), _gridData.GetGridRowNumber());
+    }
+
+    public BoxState GetBoxState(int x, int y)
+    {
+        return _gridData.GetState(x, y);
     }
 
     public int GetPlayerIndex()

@@ -347,7 +347,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _gameManager: {fileID: 748080124}
-  _gridSize: {x: 8, y: 8}
+  _gridSize: {x: 3, y: 3}
 --- !u!4 &220881360
 Transform:
   m_ObjectHideFlags: 0
@@ -1041,6 +1041,7 @@ GameObject:
   - component: {fileID: 1304199516}
   - component: {fileID: 1304199515}
   - component: {fileID: 1304199518}
+  - component: {fileID: 1304199519}
   m_Layer: 0
   m_Name: Button Reset
   m_TagString: Untagged
@@ -1055,17 +1056,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1304199513}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: -0.1290552, w: 0.9916374}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 364152070}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.90400004, y: 0.90000004}
-  m_AnchorMax: {x: 0.90400004, y: 0.90000004}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -14.83}
+  m_AnchorMin: {x: 0.5, y: 0.1}
+  m_AnchorMax: {x: 0.5, y: 0.1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 80.66409, y: 80.66409}
+  m_SizeDelta: {x: 279.26477, y: 279.26465}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1304199515
 MonoBehaviour:
@@ -1155,7 +1156,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 8a834c737180258429ae2b83750cdc31, type: 3}
+  m_Sprite: {fileID: 21300000, guid: e815577556af68e44b1461e95ea1ac50, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1186,7 +1187,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rotateSpeed: -20
-  _speed: 2
+  _speed: 0
   _amplitudeMax: 3
   _amplitudeMin: -3
   _offSetMax: 5
@@ -1234,6 +1235,49 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1304199519
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1304199513}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3edd389904a0c864192811911a12b080, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _colorGradient:
+    serializedVersion: 2
+    key0: {r: 1, g: 1, b: 1, a: 0.5529412}
+    key1: {r: 0.7830189, g: 0.7830189, b: 0.7830189, a: 0.5529412}
+    key2: {r: 1, g: 1, b: 1, a: 0}
+    key3: {r: 0, g: 0, b: 0, a: 0}
+    key4: {r: 0, g: 0, b: 0, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 32382
+    ctime2: 65535
+    ctime3: 0
+    ctime4: 0
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_ColorSpace: -1
+    m_NumColorKeys: 3
+    m_NumAlphaKeys: 2
+  _speed: 1
 --- !u!1 &1309995026
 GameObject:
   m_ObjectHideFlags: 0
@@ -1444,7 +1488,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _gameManager: {fileID: 748080124}
   _buttonLayoutContainer: {fileID: 1310523667}
-  _lineLayoutContainer: {fileID: 0}
   _buttonPrefab: {fileID: 3490234209624225230, guid: 92ba3f427d48ce34785db23c902928ae,
     type: 3}
   _crossSprite: {fileID: 21300000, guid: 632c4f537cebc8345bc841ff4a56b1cd, type: 3}
@@ -1638,7 +1681,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2089869418
 RectTransform:
   m_ObjectHideFlags: 0

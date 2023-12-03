@@ -8,7 +8,6 @@ public class ViewManager : MonoBehaviour
 {
     [SerializeField] private GameManager _gameManager;
     [SerializeField] private GridLayoutGroup _buttonLayoutContainer;
-    [SerializeField] private GridLayoutGroup _lineLayoutContainer;
     [SerializeField] private GameObject _buttonPrefab;
     [SerializeField] private Sprite _crossSprite;
     [SerializeField] private Sprite _circleSprite;
@@ -57,7 +56,6 @@ public class ViewManager : MonoBehaviour
         _gameManager.PlayerClicOnBox(x, y);
     }
 
-
     //! Button Grid
     private void CreateBoxGrid()
     {
@@ -91,20 +89,6 @@ public class ViewManager : MonoBehaviour
 
         //? (1 - "ratio") = prend l'inverse du ratio
         _buttonLayoutContainer.spacing = _cellSize * (1 - SPACING_RATIO);
-    }
-
-    private void InitialiseLineLayout()
-    {
-        // int lineX = (int)_gridSize.x - 1;
-        // int lineY = (int)_gridSize.y - 1;
-
-        // _lineLayoutContainer.constraintCount = lineX;
-        // _lineLayoutContainer.cellSize = _layoutCellSizeRatio - ;
-
-        // for (int x = 0; x < lineX; x++)
-        // {
-            
-        // }
     }
 
     public void UpdateBox(int x, int y, BoxState state)
@@ -151,6 +135,18 @@ public class ViewManager : MonoBehaviour
             for (int y = 0; y < _gridSize.y; y++)
             {
                 _boxControler[(x, y)].SetButtonValue(false);
+            }
+        }
+    }
+
+    void RemoveAllEmptyBox()
+    {
+        for (int x = 0; x < _gridSize.x; x++)
+        {
+            for (int y = 0; y < _gridSize.y; y++)
+            {
+                if(_gameManager.GetBoxState(x, y) == BoxState.Empty)
+                    _boxControler[(x, y)].PlayRemoveAnimation();
             }
         }
     }
@@ -226,6 +222,7 @@ public class ViewManager : MonoBehaviour
     {
         DisableAllButton();
         HideAllPanel();
+        RemoveAllEmptyBox();
         _panelVictory.SetActive(true);
         HideTurnItem(_circleRect);
         HideTurnItem(_crossRect);
