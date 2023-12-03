@@ -3,26 +3,27 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class BoxControler : MonoBehaviour , IPointerEnterHandler , IPointerExitHandler
+public class BoxControler : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     [Header("Sprites : ")]
     [SerializeField] private Sprite _circleSprite;
     [SerializeField] private Sprite _crossSprite;
-    // [SerializeField] private Sprite _emptySprite;
     [Space]
     [SerializeField] private Gradient _colorGradient;
     [SerializeField] private DoTweenAtHome _colorSwap;
     [SerializeField] private DoTweenAtHome _scaleBounce;
-    [SerializeField] private DoTweenAtHome _removeAnimation;
-    [SerializeField] private float _removeAnimationDirectionAmplitude;
-    [SerializeField] private AnimationCurve _fallingFactorCurve;
-    
+    [Space]
+    [SerializeField] private float _removeAnimationDuration;
+    [SerializeField] private AnimationCurve _removeAnimationCurve;
+    [SerializeField] private AnimationCurve _resetAnimationCurve;
+
     [Header("Circle Move Animation :")]
     [SerializeField] private float _circleMoveSpeed;
     [SerializeField] private float _circleMoveAmplitudeMin;
     [SerializeField] private float _circleMoveAmplitudeMax;
     [SerializeField] private float _circleMoveOffSetMin;
     [SerializeField] private float _circleMoveOffSetMax;
+
     [Space]
     [SerializeField] private int _x;
     [SerializeField] private int _y;
@@ -37,9 +38,11 @@ public class BoxControler : MonoBehaviour , IPointerEnterHandler , IPointerExitH
     private float _circleAmplitude;
     private float _circleOffset;
     private float _circleAnimationDirection;
-    private Vector2 _removeAnimationStartPosition;
-    private Vector2 _removeAnimationDirection;
     private bool _isRunningIdleAnimation = true;
+    private Tweener _removeAnimiation;
+    private Tweener _resetAnimiation;
+    private Vector3 _circleAnimationPositionOffset;
+    
 
     void Start()
     {
@@ -55,9 +58,6 @@ public class BoxControler : MonoBehaviour , IPointerEnterHandler , IPointerExitH
 
 
         _colorSwap.UpdateAction = ColorSwapUpdate;
-
-        _removeAnimation.StartAction = RemoveAnimationStart;
-        _removeAnimation.UpdateAction = RemoveAnimationUpdate;
 
         _scaleBounce.UpdateAction = ScaleBounceUpdate;
         _scaleBounce.EndAction = EndBounceAnimation;
@@ -95,12 +95,12 @@ public class BoxControler : MonoBehaviour , IPointerEnterHandler , IPointerExitH
                 break;
 
             case BoxState.Empty:
-                ResetAnimation(() => 
+                _image.sprite = null;
+                _image.color = _colorStartBackup;
+                ResetAnimation(() =>
                 {
-                    _image.sprite = null;
-                    _image.color = _colorStartBackup;
                     SetButtonValue(true);
-                    CircleMoveAnimationStart();
+                    _isRunningIdleAnimation = true;
                 });
                 break;
         }
@@ -111,9 +111,8 @@ public class BoxControler : MonoBehaviour , IPointerEnterHandler , IPointerExitH
     {
         _colorSwap.Update(Time.deltaTime);
         _scaleBounce.Update(Time.deltaTime);
-        _removeAnimation.Update(Time.deltaTime);
 
-        if(_isRunningIdleAnimation)
+        if (_isRunningIdleAnimation)
             CicleMoveAnimationUpdate(Time.time);
     }
 
@@ -127,20 +126,19 @@ public class BoxControler : MonoBehaviour , IPointerEnterHandler , IPointerExitH
 
     void CicleMoveAnimationUpdate(float time)
     {
-        Vector3 positionOffset = Vector3.zero;
         Vector3 rotationOffset = Vector3.zero;
 
         float sinFactor = Mathf.Sin((time * _circleMoveSpeed * _circleAnimationDirection) + _circleOffset);
         float cosFactor = Mathf.Cos((time * _circleMoveSpeed * _circleAnimationDirection) + _circleOffset);
 
-        positionOffset.x = sinFactor;
-        positionOffset.y = cosFactor;
-        positionOffset *= _circleAmplitude;
+        _circleAnimationPositionOffset.x = sinFactor;
+        _circleAnimationPositionOffset.y = cosFactor;
+        _circleAnimationPositionOffset *= _circleAmplitude;
 
         rotationOffset.z = sinFactor * _circleAmplitude;
 
         _rectTransform.rotation = Quaternion.Euler(rotationOffset);
-        _rectTransform.localPosition = positionOffset;
+        _rectTransform.localPosition = _circleAnimationPositionOffset;
     }
 
     void ScaleBounceUpdate(float time)
@@ -171,24 +169,20 @@ public class BoxControler : MonoBehaviour , IPointerEnterHandler , IPointerExitH
 
     public void PlayRemoveAnimation()
     {
-        // print("RemoveAnimation Start !");
-        _removeAnimation.Start();
-
+        RemoveAnimation();
     }
 
-    void RemoveAnimationStart()
+    void RemoveAnimation()
     {
-        _removeAnimationStartPosition = _rectTransform.localPosition;
-        _removeAnimationDirection = Random.insideUnitCircle.normalized * _removeAnimationDirectionAmplitude;
         _isRunningIdleAnimation = false;
-        // print(_removeAnimationStartPosition);
-    }
-
-    void RemoveAnimationUpdate(float time)
-    {
-        Vector2 newPosition = _removeAnimationStartPosition + (_removeAnimationDirection * time);
-        newPosition.y = Mathf.LerpUnclamped(newPosition.y, -Camera.main.pixelHeight / 2, _fallingFactorCurve.Evaluate(time));
-        _rectTransform.localPosition = newPosition;
+        Vector2 startPosition = _rectTransform.localPosition;
+        float pixelHeight = Camera.main.pixelHeight;
+        Vector2 endPosition = Random.insideUnitCircle.normalized * (pixelHeight + (pixelHeight * 0.1f));
+        DOTween.To((time) =>
+        {
+            _rectTransform.localPosition = Vector2.LerpUnclamped(startPosition, endPosition, time);
+        }, 0, 1, _removeAnimationDuration)
+        .SetEase(_removeAnimationCurve);
     }
 
     void ResetAnimation(System.Action endAction)
@@ -196,9 +190,9 @@ public class BoxControler : MonoBehaviour , IPointerEnterHandler , IPointerExitH
         Vector2 startPosition = _rectTransform.localPosition;
         DOTween.To((time) =>
         {
-            _rectTransform.localPosition = Vector2.Lerp(startPosition, Vector2.zero, time);
-        }, 0, 1, .5f)
-        .SetEase(Ease.Linear)
-        .OnComplete(() => {endAction.Invoke();});
+            _rectTransform.localPosition = Vector2.LerpUnclamped(startPosition, _circleAnimationPositionOffset, time);
+        }, 0, 1, _removeAnimationDuration)
+        .SetEase(_resetAnimationCurve)
+        .OnComplete(() => { endAction.Invoke(); });
     }
 }

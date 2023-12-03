@@ -133,6 +133,7 @@ public class ViewManager : MonoBehaviour
         HideTurnItem(_circleRect);
         ShowTurnItem(_crossRect);
         ChangePreviewSprite(BoxState.Circle);
+        _removeXIndex = 0;
     }
 
     void DisableAllButton()
