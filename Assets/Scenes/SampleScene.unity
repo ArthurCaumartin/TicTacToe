@@ -347,7 +347,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _gameManager: {fileID: 748080124}
-  _gridSize: {x: 4, y: 4}
+  _gridSize: {x: 20, y: 20}
 --- !u!4 &220881360
 Transform:
   m_ObjectHideFlags: 0

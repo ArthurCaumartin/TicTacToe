@@ -30,6 +30,7 @@ public class GridData : MonoBehaviour
 
         _grid[x, y] = stateToSet;
         _gameManager.OnBoxChange(new BoxChangeArgs(x, y, stateToSet));
+        
         //? le "?" si onCase == null, call pas la fct
         // onBoxChangeEvent?.Invoke(this, new BoxChangeArgs(x, y, stateToSet));
     }

@@ -165,7 +165,7 @@ public class ViewManager : MonoBehaviour
     void RemoveBoxUpdate(float time)
     {
         float callThresold = _removeBoxAnimation.Duration / (_gridSize.x + 1);
-        print(callThresold);
+        // print(callThresold);
         _removeAnimationTimeSpend += Time.deltaTime;
 
         if (_removeAnimationTimeSpend >= callThresold)
