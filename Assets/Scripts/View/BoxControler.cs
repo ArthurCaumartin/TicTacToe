@@ -176,7 +176,7 @@ public class BoxControler : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     {
         _isRunningIdleAnimation = false;
         Vector2 startPosition = _rectTransform.localPosition;
-        float pixelHeight = Camera.main.pixelHeight / 2;
+        float pixelHeight = Camera.main.pixelHeight;
         Vector2 endPosition = Random.insideUnitCircle.normalized * (pixelHeight + (pixelHeight * 0.1f));
         DOTween.To((time) =>
         {
